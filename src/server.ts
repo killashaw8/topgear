@@ -10,7 +10,7 @@ mongoose
     const PORT = process.env.MONGO_URL ?? 8008;
     app.listen(PORT, function() {
       console.info(`The server is running on ${PORT}`);
-      console.info(`Admin project on htyp://localhost:${PORT}/admin \n`)
+      console.info(`Admin project on http://localhost:${PORT}/admin \n`)
     })
   })
   .catch((err) => console.log("Error on connection to the database", err));
