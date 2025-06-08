@@ -5,13 +5,13 @@ export enum ProductType {
 }
 
 export enum ProductStatus {
-    PAUSE = "PAUSE",
-    PROCESS = "PROCESS",
-    DELETE = "DELETE",
+  PAUSE = "PAUSE",
+  PROCESS = "PROCESS",
+  DELETE = "DELETE",
 }
 
 export enum ProductCollection {
   LUXURY = "LUXURY",
   SPORT = "SPORT",
-  OFFROAD = "OFFROAD",
+  BUDGET = "BUDGET",
 }

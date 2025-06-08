@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 import { MemberStatus, MemberType } from "../enums/member.enum";
 import { Request } from "express";
+import { JwtPayload } from "jsonwebtoken";
 
 export interface Member {
   _id: ObjectId; 
@@ -49,4 +50,11 @@ export interface ExtendedRequest extends Request {
   member: Member;
   file: Express.Multer.File;
   files: Express.Multer.File[];
+}
+
+export interface AdminRequest extends Request {
+  user?: {
+    _id: ObjectId;
+    role: "ADMIN" | "USER"
+  }
 }
