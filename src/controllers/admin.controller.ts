@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Errors, { HttpCode } from "../libs/Errors";
 import { T } from "../libs/types/common";
-import { LoginInput, Member, MemberInput } from "../libs/types/member";
+import { ExtendedRequest, LoginInput, Member, MemberInput } from "../libs/types/member";
 import MemberService from "../models/Member.service";
 import AuthService from "../models/Auth.service";
 import { AUTH_TIMER } from "../libs/config";
@@ -53,6 +53,18 @@ adminController.processLogin = async (req: Request, res: Response) => {
   } catch(err) {
     console.log("Error, login:", err);
     if(err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
+}
+
+adminController.logout = (req: ExtendedRequest, res: Response) => {
+  try{
+    console.log("logout");
+    res.cookie("accessToken", null, {maxAge: 0, httpOnly: true});
+    res.status(HttpCode.OK).json({logout: true});
+  } catch(err) {
+    console.log("Error, logout:", err);
+    if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
   }
 }

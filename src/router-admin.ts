@@ -10,4 +10,8 @@ routerAdmin.post("/login",
   adminController.processLogin
 )
 
+routerAdmin.post("/logout",
+  adminController.logout
+)
+
 export default routerAdmin;
