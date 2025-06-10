@@ -13,6 +13,8 @@ class MemberService {
     this.memberModel = MemberModel
   }
 
+/** ADMIN **/
+
   public async processSignup(input: MemberInput): Promise<Member> {
     const exist = await this.memberModel
       .findOne({memberType: MemberType.ADMIN})
@@ -55,6 +57,16 @@ class MemberService {
   }
 
   
+
+
+
+
+
+
+  
+/** USER **/
+
+
 }
 
 export default MemberService;
