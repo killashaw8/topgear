@@ -2,16 +2,18 @@ import express from "express";
 const routerAdmin = express.Router();
 import adminController from "../src/controllers/admin.controller";
 
-routerAdmin.post("/signup", 
-  adminController.processSignup
-)
+routerAdmin.get("/", adminController.goHome);
 
-routerAdmin.post("/login", 
-  adminController.processLogin
-)
+routerAdmin
+  .get("/signuo", adminController.getSignup)
+  .post("/signup", adminController.processSignup);
 
-routerAdmin.post("/logout",
-  adminController.logout
-)
+routerAdmin
+  .get("/login", adminController.getLogin)
+  .post("/login", adminController.processLogin);
+
+routerAdmin.post("/logout", adminController.logout);
+
+routerAdmin.get("/check-me", adminController.checkAuthSession);
 
 export default routerAdmin;
