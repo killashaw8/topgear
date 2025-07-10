@@ -127,7 +127,7 @@ adminController.checkAuthSession = async (req: AdminRequest, res: Response) => {
   }
 };
 
-adminController.verifyRestaurant = (
+adminController.verifyAdmin = (
   req: AdminRequest,
   res: Response,
   next: NextFunction

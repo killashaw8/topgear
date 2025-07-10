@@ -12,6 +12,6 @@ export enum ProductStatus {
 
 export enum ProductCollection {
   LUXURY = "LUXURY",
-  SPORT = "SPORT",
   BUDGET = "BUDGET",
+  SPORT = "SPORT"
 }

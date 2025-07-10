@@ -10,7 +10,7 @@
           <a class="nav-link active" href="/admin/">Home</a>
         </li>
         <li class="nav-item" style="cursor: pointer">
-          <a class="nav-link" href="/admin/product/all">Menu</a>
+          <a class="nav-link" href="/admin/product/all">Products</a>
         </li>
         <li class="nav-item" style="cursor: pointer">
           <a class="nav-link" href="/admin/user/all">Users</a>
@@ -29,15 +29,15 @@
       <div class="board">
         <div class="dishes-table">
           <span class="new-dish-txt" style="margin-bottom: 30px">
-            RESTAURANT MENU
+            TopGear Inventory
           </span>
           <table class="table table-bordered table-hover">
             <thead class="thead-light">
               <tr class="thead-light">
                 <th scope="col">T/r</th>
                 <th scope="col">Product Name</th>
+                <th scope="col">Product Collection</th>
                 <th scope="col">Product Type</th>
-                <th scope="col">Product Volume</th>
                 <th scope="col">Product Price</th>
                 <th scope="col">Product Left Count</th>
                 <th scope="col">Status</th>
@@ -45,13 +45,12 @@
             </thead>
             <!--  LOOP PRODUCTS: START  -->
             <% products.map(function(value, key) { %>
-              <tbody style="background: white">
+              <tbody style="background: rgb(180, 235, 235)">
                 <td><%= key + 1 %></td>
                 <td><%= value.productName %></td>
                 <td><%= value.productCollection %></td>
-                <td><%= value.productCollection === 'DRINK' ? value.productVolume :
-                value.productSize %></td>
-                <td><%= value.productPrice %></td>
+                <td><%= value.productType %></td>
+                <td>$<%= value.productPrice %></td>
                 <td><%= value.productLeftCount %></td>
                 <td>
                   <select class="spec-select new-product-status"
@@ -101,6 +100,15 @@
               class="product-status"
               hidden
             />
+            <div class="long-input">
+              <label>Product Production Year</label>
+              <input
+                type="text"
+                placeholder="Year"
+                name="productProdYear"
+                class="product-name"
+              />
+            </div>
           </div>
           <div class="half-input-frame">
             <div class="half-input">
@@ -125,33 +133,19 @@
           <div class="half-input-frame">
             <div class="half-input">
               <label>Product Type</label>
-              <select class="product-collection" name="productCollection">
-                <option value="DISH" selected>Dish</option>
-                <option value="SALAD">Salad</option>
-                <option value="DESSERT">Dessert</option>
-                <option value="DRINK">Drink</option>
-                <option value="OTHER">Other</option>
+              <select class="product-collection" name="productType">
+                <option value="SEDAN" selected>Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="CROSSOVER">Crossover</option>
               </select>
             </div>
 
             <div class="half-input" id="product-collection">
-              <label>Dish Volume</label>
-              <select class="product-size" name="productSize">
-                <option value="SMALL">Small</option>
-                <option value="NORMAL" selected>Normal</option>
-                <option value="LARGE">Large</option>
-                <option value="SET">Set</option>
-              </select>
-            </div>
-
-            <div class="half-input" id="product-volume" style="display: none">
-              <label>Drink Volume</label>
-              <select class="product-volume" name="productVolume">
-                <option value="0.5">0,5 liters</option>
-                <option value="1" selected>1 liters</option>
-                <option value="1.2">1,2 liters</option>
-                <option value="1.5">1,5 liters</option>
-                <option value="2">2 liters</option>
+              <label>Product Collection</label>
+              <select class="product-size" name="productCollection">
+                <option value="LUXURY">Luxury</option>
+                <option value="SPORT">Sport</option>
+                <option value="BUDGET">Budget</option>
               </select>
             </div>
           </div>
