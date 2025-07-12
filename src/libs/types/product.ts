@@ -28,7 +28,7 @@ export interface ProductInquiry {
   limit: number;
   productCollection?: ProductCollection;
   productType?: ProductType;
-  productProdYear: number;
+  productProdYear?: number;
   search?: string;
 }
 
