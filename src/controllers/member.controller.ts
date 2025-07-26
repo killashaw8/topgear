@@ -32,8 +32,10 @@ memberController.signup = async (req: Request, res: Response) => {
   
       input.memberImage = file?.path.replace(/\\/g, '/');
   
-    const result = await memberService.signup(input),
-      token = await authService.createToken(result);
+    const result = await memberService.signup(input)
+    const token = await authService.createToken(result);
+
+      console.log("token:", token);
 
     res.cookie("accessToken", token, 
       {
@@ -56,11 +58,13 @@ memberController.login = async (req: Request, res: Response) => {
     const input: LoginInput = req.body,
       result = await memberService.login(input),
       token = await authService.createToken(result);
+      
+      console.log('token:', token);
 
     res.cookie("accessToken", token, 
       {
         maxAge: AUTH_TIMER * 3600 * 1000,
-        httpOnly: false
+        httpOnly: false, 
       }
     );
 
@@ -75,7 +79,7 @@ memberController.login = async (req: Request, res: Response) => {
 memberController.logout = (req: ExtendedRequest, res: Response) => {
   try{
     console.log("logout");
-    res.cookie("accessToken", null, {maxAge: 0, httpOnly: true});
+    res.cookie("accessToken", null, {maxAge: 0, httpOnly: true });
     res.status(HttpCode.OK).json({logout: true});
   } catch(err) {
     console.log("Error, logout:", err);
@@ -102,8 +106,9 @@ memberController.updateMember = async (req: ExtendedRequest, res: Response) => {
     console.log("updateMember");
     const input: MemberInput = req.body;
     if (req.file) input.memberImage = req.file.path.replace(/\\/g, "/");
-    const result = await memberController.updateMember(req.member, input);
-
+    const result = await memberService.updateMember(req.member, input);
+   
+    res.status(HttpCode.OK).json(result);
   } catch (err) {
     console.log("Error, updateMember:", err);
     if (err instanceof Errors) res.status(err.code).json(err);
@@ -116,7 +121,7 @@ memberController.updateMember = async (req: ExtendedRequest, res: Response) => {
 memberController.getTopUsers = async (req: Request, res: Response) => {
   try {
     console.log("getTopUsers");
-    const result = await memberController.getTopUsers();
+    const result = await memberService.getTopUsers();
 
     res.status(HttpCode.OK).json(result);
   } catch (err) {

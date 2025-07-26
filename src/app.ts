@@ -1,7 +1,9 @@
+import cors from "cors"
 import express from "express";
 import path from "path";
 import morgan from "morgan";
 import session from "express-session";
+import cookieParser from "cookie-parser";
 import { MORGAN_FORMAT } from "./libs/config";
 import router from "./router";
 import routerAdmin from "./router-admin";
@@ -20,6 +22,13 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static("./uploads"));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+app.use(
+    cors({
+        credentials: true,
+        origin: "http://localhost:5173",
+    })
+);
+app.use(cookieParser());
 app.use(morgan(MORGAN_FORMAT));
 
 // Sessions
