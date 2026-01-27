@@ -4,7 +4,7 @@ import OrderModel from "../schema/Order.model";
 import OrderItemModel from "../schema/OrderItem.model";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import Errors, { HttpCode, Message } from "../libs/Errors";
-import {ObjectId} from "mongoose";
+import { Types } from "mongoose";
 import MemberService from "./Member.service";
 import { OrderStatus } from "../libs/enums/order.enum";
 
@@ -27,11 +27,12 @@ class OrderService {
     const delivery = amount < 100 ? 5 : 0;
 
     try {
-      const newOrder: Order = await this.orderModel.create({
+      const newOrderDoc = await this.orderModel.create({
         orderTotal: amount + delivery,
         orderDelivery: delivery,
         memberId: memberId,
       });
+      const newOrder: Order = newOrderDoc.toObject();
 
       const orderId = newOrder._id;
       console.log("orderId", newOrder._id);
@@ -44,7 +45,7 @@ class OrderService {
     }
   }
 
-  private async recordOrderItems(orderId: ObjectId, input: OrderItemInput[]): Promise<void> {
+  private async recordOrderItems(orderId: Types.ObjectId, input: OrderItemInput[]): Promise<void> {
     const promisedList = input.map( async (item: OrderItemInput) => {
       item.orderId = orderId;
       item.productId = shapeIntoMongooseObjectId(item.productId);
@@ -100,6 +101,7 @@ class OrderService {
         {orderStatus: orderStatus}, 
         {new: true}
       )
+      .lean()
       .exec();
     if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);     //No needed logic
 

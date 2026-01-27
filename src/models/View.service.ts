@@ -11,15 +11,17 @@ class ViewService {
   }
 
 
-  public async checkViewExistence(input: ViewInput): Promise<View> {
+  public async checkViewExistence(input: ViewInput): Promise<View | null> {
     return await this.viewModel
       .findOne({memberId: input.memberId, viewRefId: input.viewRefId})
+      .lean()
       .exec();
   }
 
   public async insertMemberView(input: ViewInput): Promise<View> {
     try{
-      return await this.viewModel.create(input);
+      const result = await this.viewModel.create(input);
+      return result.toObject();
     } catch(err) {
       console.log("ERROR, model: insertMemberView:", err);
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);

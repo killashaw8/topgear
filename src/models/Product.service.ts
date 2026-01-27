@@ -7,7 +7,7 @@ import { ProductStatus } from "../libs/enums/product.enum";
 import { T } from "../libs/types/common";
 import { ViewInput } from "../libs/types/view";
 import { ViewGroup } from "../libs/enums/view.enum";
-import {ObjectId} from "mongoose";
+import { Types } from "mongoose";
 import ViewService from "./View.service";
 
 class ProductService {
@@ -45,7 +45,7 @@ class ProductService {
     return result;
   }
 
-  public async getProduct(memberId: ObjectId | null, id: string): Promise<Product> {
+  public async getProduct(memberId: Types.ObjectId | null, id: string): Promise<Product> {
     const productId = shapeIntoMongooseObjectId(id);
     
     let result = await this.productModel
@@ -53,6 +53,7 @@ class ProductService {
         _id: productId, 
         productStatus: ProductStatus.PROCESS
       })
+      .lean()
       .exec();
     if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
@@ -78,7 +79,9 @@ class ProductService {
             {$inc: {productViews: +1}},
             {new: true}
           )
+          .lean()
           .exec()
+        if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
       }
 
 
@@ -94,8 +97,9 @@ class ProductService {
   public async getAllProducts(): Promise<Product[]> {
     const result = await this.productModel.
     find()
+    .lean()
     .exec();
-    if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+    if(result.length === 0) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
     return result;
   }
@@ -103,7 +107,8 @@ class ProductService {
 
   public async createNewProduct(input: ProductInput): Promise<Product> {
     try{
-      return await this.productModel.create(input);
+      const result = await this.productModel.create(input);
+      return result.toObject();
     } catch(err) {
       console.error("Error, model:createNewProduct:", err)
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
@@ -117,6 +122,7 @@ class ProductService {
     id = shapeIntoMongooseObjectId(id);
     const result = await this.productModel.
     findByIdAndUpdate({_id: id}, input, {new: true})
+    .lean()
     .exec();
     if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 

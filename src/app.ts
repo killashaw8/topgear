@@ -24,8 +24,11 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(
     cors({
-        credentials: true,
-        origin: "http://localhost:5173",
+      credentials: true,
+      origin: [
+        "http://localhost:5173",
+        "https://topgear-react.vercel.app/"
+      ]
     })
 );
 app.use(cookieParser());
