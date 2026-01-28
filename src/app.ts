@@ -5,7 +5,7 @@ import morgan from "morgan";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import { MORGAN_FORMAT } from "./libs/config";
-import { Server as SocketIOServer } from "Socket.io";
+import { Server as SocketIOServer } from "socket.io";
 import http from "http";
 import router from "./router";
 import routerAdmin from "./router-admin";
@@ -67,18 +67,38 @@ const io = new SocketIOServer(server, {
   cors: {
     origin: true,
     credentials: true
-  }
+  },
+  // Allow older Socket.IO / Engine.IO clients to connect without transport errors.
+  allowEIO3: true
 }); 
 
-let summaryClient = 0
-io.on("connection", (socket) => {
-  summaryClient++;
-  console.log(`Connection & total [${summaryClient}]`);
+io.engine.on("connection_error", (err) => {
+  console.log("\x1b[31m%s\x1b[0m", "Socket connection error", {
+    code: err.code,
+    message: err.message,
+    context: err.context,
+  });
+});
 
-  socket.on("disconnect", () => {
-    summaryClient--;
-    console.log(`Disconnection & total [${summaryClient}]`);
-  })
+io.on("connection", (socket) => {
+  const count = io.of("/").sockets.size;
+  const transport = socket.conn.transport.name;
+  const protocol = socket.conn.protocol;
+  const origin = socket.handshake.headers.origin ?? "n/a";
+  const ua = socket.handshake.headers["user-agent"] ?? "n/a";
+  console.log(
+    "\x1b[32m%s\x1b[0m",
+    `Connection & total [${count}] transport=${transport} protocol=EIO${protocol} origin=${origin}`
+  );
+  console.log("\x1b[36m%s\x1b[0m", `Socket client UA: ${ua}`);
+
+  socket.on("disconnect", (reason) => {
+    const nextCount = io.of("/").sockets.size;
+    console.log(
+      "\x1b[33m%s\x1b[0m",
+      `Disconnection & total [${nextCount}] reason=${reason}`
+    );
+  });
 });
 
 export default server;
