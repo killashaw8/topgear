@@ -5,6 +5,8 @@ import morgan from "morgan";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import { MORGAN_FORMAT } from "./libs/config";
+import { Server as SocketIOServer } from "Socket.io";
+import http from "http";
 import router from "./router";
 import routerAdmin from "./router-admin";
 import ConnectMongoDBSession from "connect-mongodb-session";
@@ -24,11 +26,8 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(
     cors({
-      credentials: true,
-      origin: [
-        "http://localhost:5173",
-        "https://topgear-react.vercel.app/"
-      ]
+      origin: true,
+      credentials: true
     })
 );
 app.use(cookieParser());
@@ -63,7 +62,23 @@ app.set("view engine", "ejs");
 app.use("/admin", routerAdmin);   //SSR => EJS
 app.use("/", router);             //SPA => React
 
+const server = http.createServer(app);
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: true,
+    credentials: true
+  }
+}); 
 
+let summaryClient = 0
+io.on("connection", (socket) => {
+  summaryClient++;
+  console.log(`Connection & total [${summaryClient}]`);
 
+  socket.on("disconnect", () => {
+    summaryClient--;
+    console.log(`Disconnection & total [${summaryClient}]`);
+  })
+});
 
-export default app;
+export default server;
