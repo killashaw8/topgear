@@ -18,9 +18,14 @@ const store = new MongoDBStore({
   collection: "sessions"
 })
 
+const rootDir = process.cwd();
+const isProd = process.env.NODE_ENV === "production";
+const viewsDir = isProd ? path.join(rootDir, "src", "views") : path.join(__dirname, "views");
+const publicDir = isProd ? path.join(rootDir, "src", "public") : path.join(__dirname, "public");
+
 // Entrance
 const app = express();
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(publicDir));
 app.use("/uploads", express.static("./uploads"));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -55,7 +60,7 @@ app.use(
 )
 
 // Views
-app.set("views", path.join(__dirname, "views"));
+app.set("views", viewsDir);
 app.set("view engine", "ejs");
 
 // Routers

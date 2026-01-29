@@ -1,0 +1,155 @@
+.my-container {
+  position: relative;
+  width: auto;
+  height: auto;
+  min-width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(-45deg, #110303f0, #0abab5, #088a98fc, #00ffee);
+}
+
+.my-container a {
+  text-decoration: none;
+  color: #000000;
+}
+
+.my-container .nav-item a {
+  color: #181c1b;
+}
+
+.my-container .nav-item a.disabled {
+  color: #898071;
+}
+
+.my-container .navigation-menu {
+  position: absolute;
+  z-index: 10000;
+  top: 1%;
+  color: #efefee;
+  font-size: 40px;
+  font-family: monospace;
+}
+
+.my-frame {
+  position: relative;
+  padding-bottom: 80px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board {
+  position: relative;
+  margin-top: 100px;
+  width: 720px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  padding: 30px 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header-name {
+  font-family: "Source Serif Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 25px;
+  color: #000000;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.long-input {
+  position: relative;
+  margin-top: 25px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.long-input label {
+  font-family: "Source Serif Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 25px;
+  color: #000000;
+}
+
+.long-input input {
+  position: relative;
+  margin-top: 10px;
+  padding: 10px 12px;
+  width: 100%;
+  height: 42px;
+  border: 1px solid #d6d6d6;
+  background: #ffffff;
+  box-shadow: none;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #333333;
+}
+
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field input {
+  padding-right: 40px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  color: #666666;
+}
+
+.toggle-password svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.long-input input.is-valid {
+  border-color: #2e7d32;
+}
+
+.long-input input.is-invalid {
+  border-color: #c62828;
+}
+
+.long-input input:disabled {
+  background: #f4f4f4;
+  color: #888888;
+}
+
+.operation-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}

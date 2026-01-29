@@ -1,6 +1,6 @@
 import express from "express";
 const routerAdmin = express.Router();
-import adminController from "../src/controllers/admin.controller";
+import adminController from "./controllers/admin.controller";
 import makeUploader from "./libs/utils/uploader";
 import productController from "./controllers/product.controller";
 
@@ -21,6 +21,10 @@ routerAdmin
 routerAdmin.get("/logout", adminController.logout);
 
 routerAdmin.get("/check-me", adminController.checkAuthSession);
+
+routerAdmin.get("/me", adminController.verifyAdmin, adminController.getMyPage);
+routerAdmin.post("/me", adminController.verifyAdmin, adminController.updateMyPage);
+routerAdmin.post("/me/verify-password", adminController.verifyAdmin, adminController.verifyMyPassword);
 
 // Products
 routerAdmin.get(

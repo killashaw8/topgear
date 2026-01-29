@@ -1,0 +1,139 @@
+<%- include('includes/header') %>
+
+<link rel="stylesheet" type="text/css" href="/css/my.css" />
+
+<body>
+  <div class="my-container">
+    <div class="navigation-menu">
+      <ul class="nav justify-content-center">
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link active" href="/admin/">Home</a>
+        </li>
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link" href="/admin/product/all">Products</a>
+        </li>
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link" href="/admin/user/all">Users</a>
+        </li>
+        <li class="nav-item" style="cursor: pointer">
+          <a class="nav-link" href="/admin/me">My Page</a>
+        </li>
+        <li
+          class="nav-item"
+          style="cursor: pointer"
+          onclick="return confirm('Do you want to logout?')"
+        >
+          <a class="nav-link" href="/admin/logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="my-frame">
+      <div class="board">
+        <div class="profile-form">
+          <span class="header-name">My Profile</span>
+          <form action="/admin/me" method="POST">
+            <div class="long-input">
+              <label>Name</label>
+              <input
+                type="text"
+                name="memberNick"
+                placeholder="Name"
+                value="<%= member?.memberNick || '' %>"
+                required
+              />
+            </div>
+
+            <div class="long-input">
+              <label>Phone</label>
+              <input
+                type="text"
+                name="memberPhone"
+                placeholder="Phone"
+                value="<%= member?.memberPhone || '' %>"
+                required
+              />
+            </div>
+
+            <div class="long-input">
+              <label>Email</label>
+              <input
+                type="email"
+                name="memberEmail"
+                placeholder="Email"
+                value="<%= member?.memberEmail || '' %>"
+              />
+            </div>
+
+            <div class="long-input">
+              <label>Old Password</label>
+              <div class="password-field">
+                <input
+                  type="password"
+                  id="old-password"
+                  name="oldPassword"
+                  placeholder="Enter your current password"
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  data-target="old-password"
+                  aria-label="Toggle old password visibility"
+                  aria-pressed="false"
+                ></button>
+              </div>
+            </div>
+
+            <div class="long-input">
+              <label>New Password</label>
+              <div class="password-field">
+                <input
+                  type="password"
+                  id="new-password"
+                  name="memberPassword"
+                  placeholder="Enter new password"
+                  disabled
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  data-target="new-password"
+                  aria-label="Toggle new password visibility"
+                  aria-pressed="false"
+                ></button>
+              </div>
+            </div>
+
+            <div class="long-input">
+              <label>Confirm Password</label>
+              <div class="password-field">
+                <input
+                  type="password"
+                  id="confirm-password"
+                  name="confirmPassword"
+                  placeholder="Re-enter new password"
+                  disabled
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  data-target="confirm-password"
+                  aria-label="Toggle confirm password visibility"
+                  aria-pressed="false"
+                ></button>
+              </div>
+            </div>
+
+            <div class="operation-buttons">
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="/js/my.js"></script>
+</body>
+
+<%- include('includes/footer') %>

@@ -156,6 +156,26 @@ class MemberService {
     return result;
   }
 
+  public async updateMyProfile(member: Member, input: MemberUpdateInput): Promise<Member> {
+    const memberId = shapeIntoMongooseObjectId(member._id);
+    const result = await this.memberModel
+      .findOneAndUpdate({_id: memberId}, input, {new: true})
+      .lean()
+      .exec();
+
+    if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED)
+    
+    return result;
+  }
+
+  public async getMemberWithPasswordById(memberId: Member["_id"]): Promise<Member | null> {
+    return await this.memberModel
+      .findById(memberId)
+      .select("+memberPassword")
+      .lean()
+      .exec();
+  }
+
   public async getTopUsers(): Promise<Member[]> {
     const result = await this.memberModel
       .find({

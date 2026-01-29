@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { T } from "../libs/types/common";
-import { AdminRequest, ExtendedRequest, LoginInput, Member, MemberInput } from "../libs/types/member";
+import { AdminRequest, ExtendedRequest, LoginInput, Member, MemberInput, MemberUpdateInput } from "../libs/types/member";
 import MemberService from "../models/Member.service";
 import { MemberType } from "../libs/enums/member.enum";
+import * as bcrypt from "bcryptjs";
 
 const memberService = new MemberService();
 const adminController: T = {};
@@ -101,6 +102,83 @@ adminController.getUsers = async (req: Request, res: Response) => {
   }catch (err) {
     console.log("Error, getUsers:", err);
     res.redirect("/admin/login");
+  }
+};
+
+adminController.getMyPage = async (req: AdminRequest, res: Response) => {
+  try {
+    console.log("getMyPage");
+    const result = await memberService.getMemberDetail(req.member);
+    res.render("my", {member: result});
+  } catch (err) {
+    console.log("Error, getMyPage:", err);
+    res.redirect("/admin/login");
+  }
+};
+
+adminController.verifyMyPassword = async (req: AdminRequest, res: Response) => {
+  try {
+    const oldPassword = String(req.body.oldPassword || "").trim();
+    if (!oldPassword) return res.json({ok: false});
+
+    const member = await memberService.getMemberWithPasswordById(req.member._id);
+    if (!member?.memberPassword) return res.json({ok: false});
+
+    const isMatch = await bcrypt.compare(oldPassword, member.memberPassword);
+    return res.json({ok: isMatch});
+  } catch (err) {
+    console.log("Error, verifyMyPassword:", err);
+    return res.json({ok: false});
+  }
+};
+
+adminController.updateMyPage = async (req: AdminRequest, res: Response) => {
+  try {
+    console.log("updateMyPage");
+    const oldPassword = String(req.body.oldPassword || "").trim();
+    const newPassword = String(req.body.memberPassword || "").trim();
+    const confirmPassword = String(req.body.confirmPassword || "").trim();
+
+    if (newPassword || confirmPassword) {
+      if (!oldPassword) {
+        return res.send(`<script> alert ("Old password is required"); window.location.replace('/admin/me') </script>`);
+      }
+      if (newPassword !== confirmPassword) {
+        return res.send(`<script> alert ("Password confirmation does not match"); window.location.replace('/admin/me') </script>`);
+      }
+
+      const memberWithPassword = await memberService.getMemberWithPasswordById(req.member._id);
+      if (!memberWithPassword?.memberPassword) {
+        return res.send(`<script> alert ("Old password is incorrect"); window.location.replace('/admin/me') </script>`);
+      }
+
+      const isMatch = await bcrypt.compare(oldPassword, memberWithPassword.memberPassword);
+      if (!isMatch) {
+        return res.send(`<script> alert ("Old password is incorrect"); window.location.replace('/admin/me') </script>`);
+      }
+    }
+
+    const input: MemberUpdateInput = {
+      _id: req.member._id,
+      memberNick: req.body.memberNick,
+      memberPhone: req.body.memberPhone,
+      memberEmail: req.body.memberEmail,
+    };
+
+    if (newPassword.length > 0) {
+      const salt = await bcrypt.genSalt();
+      input.memberPassword = await bcrypt.hash(newPassword, salt);
+    }
+
+    const result = await memberService.updateMyProfile(req.member, input);
+    req.session.member = result;
+    req.session.save(function() {
+      res.send(`<script> alert ("Profile updated"); window.location.replace('/admin/me') </script>`);
+    });
+  } catch (err) {
+    console.log("Error, updateMyPage:", err);
+    const message = err instanceof Errors ? err.message : Message.UPDATE_FAILED;
+    res.send(`<script> alert ("${message}"); window.location.replace('/admin/me') </script>`);
   }
 };
 
