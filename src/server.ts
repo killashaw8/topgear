@@ -7,6 +7,7 @@ import server from "./app";
 
 
 mongoose
+  .set("strictQuery", false)
   .connect(process.env.MONGO_URL as string, {})
   .then(data => {
     console.log("MongoDB coneection succeed");

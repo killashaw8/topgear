@@ -23,6 +23,17 @@ const isProd = process.env.NODE_ENV === "production";
 const viewsDir = isProd ? path.join(rootDir, "src", "views") : path.join(__dirname, "views");
 const publicDir = isProd ? path.join(rootDir, "src", "public") : path.join(__dirname, "public");
 
+const corsOrigins = (process.env.CORS_ORIGINS ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const corsOrigin =
+  process.env.NODE_ENV === "production"
+    ? corsOrigins
+    : corsOrigins.length
+      ? corsOrigins
+      : true;
+
 // Entrance
 const app = express();
 app.use(express.static(publicDir));
@@ -30,10 +41,10 @@ app.use("/uploads", express.static("./uploads"));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(
-    cors({
-      origin: true,
-      credentials: true
-    })
+  cors({
+    origin: corsOrigin,
+    credentials: true,
+  })
 );
 app.use(cookieParser());
 app.use(morgan(MORGAN_FORMAT));
